@@ -55,18 +55,23 @@ stoneGroup = createGroup();
   invisible = createSprite (350,500,1000000,40);
   invisible.scale = 0.1;
   invisible.visible = false;
+
+  // A game over images
+  gameOver = createSprite(displayWidth/2-400,displayHeight/2-100,1000);
+  gameOver.addImage(gameOverImg);
+  gameOver.scale = 0.6;
+  gameOver.visible = false;
 }
 
 function draw(){
 
   if(gameState === "start"){
     background(0);
+  }
     if(keyWentDown("space") && gameState === "start"){
       gameState = PLAY;
     }
-  } else if(gameState === END){
-    background(gameOverImg);
-  } else if(gameState === PLAY){ 
+   else if(gameState === PLAY){ 
   background(255);
   
   jungle.visible = true;
@@ -83,6 +88,10 @@ function draw(){
    score++;
   }
 
+  if(stoneGroup.isTouching(player)){
+    gameState = END;
+  }
+
   player.velocityY += 0.8;
 
   player.collide(invisible);
@@ -90,6 +99,13 @@ function draw(){
   banana1();
   stone1();
 
+ }
+
+ if(gameState === END){
+   background(gameOverImg);
+   player.visible = false;
+   gameOver.visible = true;
+   canvas = createCanvas(displayWidth/2-100,displayHeight-190)
  }
   drawSprites();   
 
@@ -116,6 +132,7 @@ function draw(){
   }
 }
 
+
 function banana1 (){
   if (frameCount % 150 === 0){
   banana = createSprite (displayWidth/2+200,300,600,500);
@@ -129,7 +146,7 @@ function banana1 (){
 
 function stone1 (){
   if (frameCount % 150 === 0){
-  stone = createSprite (displayWidth/2+200,600,600,500);
+  stone = createSprite (displayWidth/2+200,500,600,500);
   stone.addImage (stoneImg);
   stone.scale = 0.1;
   stone.velocityX = -8;
